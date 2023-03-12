@@ -16,8 +16,8 @@ def updatedata(udata, tdata, hdata):
         "utime": utime,
         "stime": stime,
         "udata": round(udata, 3),
-        "tdata": format(tdata, ".1f") + "°C",
-        "hdata": format(hdata, ".1f") + "%",
+        "tdata": str(format(tdata, ".1f") + "°C"),
+        "hdata": str(format(hdata, ".1f") + "%"),
     }
 
     # format data
