@@ -39,8 +39,8 @@ while True:
     checktime = mtime
     showdata.append(tdata['stime'])
     showdata.append("CH2O: %s ppm" % (tdata['udata'] - 0.03))
-    showdata.append("T & H: %s %s" % (tdata['tdata'], tdata['hdata']))
-    showdata.append(wlanip)
+    showdata.append("T: %s H: %s" % (tdata['tdata'], tdata['hdata']))
+    showdata.append("ip: %s" % wlanip)
     showdata.append('')
 
     # flush data
