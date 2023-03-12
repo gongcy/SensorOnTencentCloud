@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding:utf-8 _*-
 import time
 
 from lib import dht22
@@ -16,8 +16,8 @@ def updatedata(udata, tdata, hdata):
         "utime": utime,
         "stime": stime,
         "udata": round(udata, 3),
-        "tdata": tdata,
-        "hdata": hdata,
+        "tdata": format(tdata, ".1f") + "°C",
+        "hdata": format(hdata, ".1f") + "%",
     }
 
     # format data

@@ -3,5 +3,7 @@ CREATE TABLE "sensordata" (
 "utime" INTEGER NOT NULL,
 "utype" INTEGER DEFAULT 0 NOT NULL,
 "udata" REAL NOT NULL,
+"tdata" REAL NOT NULL,
+"hdata" REAL NOT NULL,
 "sdata" TEXT
 );
