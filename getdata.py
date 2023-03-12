@@ -22,7 +22,8 @@ def updatedata(udata, tdata, hdata):
 
     # format data
     cache = json.dumps(ddata)  # "{utime}	{stime}	{udata}".format(**ddata)
-    dbsql = "insert into sensordata (utime, udata) values ('{utime}','{udata}')".format(**ddata)
+    dbsql = "insert into sensordata (utime, udata, tdata, hdata) " \
+            "values ('{utime}','{udata}','{tdata}','{hdata}')".format(**ddata)
 
     # get config
     cfile = get_cachepath()
@@ -63,4 +64,4 @@ while True:
         n = 0
         n = ord(r_data[4]) * 256 + ord(r_data[5])
 
-        updatedata(n / 1000.0, )
+        updatedata(n / 1000.0, tdata, hdata)
