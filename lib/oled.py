@@ -1,13 +1,11 @@
-import time
+# -*- coding:utf-8 _*-
 
-import Adafruit_GPIO.SPI as SPI
 import Adafruit_SSD1306
 
 from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 
-import subprocess
 
 class oled:
     def __init__(self, type):
@@ -22,7 +20,7 @@ class oled:
 
     def _init_oled(self):
         # Raspberry Pi pin configuration:
-        RST = None     # on the PiOLED this pin isnt used
+        RST = None  # on the PiOLED this pin isnt used
         # Note the following are only used with SPI:
         DC = 23
         SPI_PORT = 0
@@ -36,7 +34,7 @@ class oled:
             self._disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST)
         else:
             self._initflag = False
-            self._error =  'no this type : %s,just i2c-128*32/iwc-128*64'%self._type
+            self._error = 'no this type : %s,just i2c-128*32/iwc-128*64' % self._type
             return False
 
         # Initialize library.
@@ -56,13 +54,13 @@ class oled:
         self._draw = ImageDraw.Draw(self._image)
 
         # Draw a black filled box to clear the image.
-        self._draw.rectangle((0,0,self._width,self._height), outline=0, fill=0)
+        self._draw.rectangle((0, 0, self._width, self._height), outline=0, fill=0)
 
         # Draw some shapes.
         # First define some constants to allow easy resizing of shapes.
         padding = -2
         self._top = padding
-        bottom = self._height-padding
+        bottom = self._height - padding
         # Move left to right keeping track of the current x position for drawing shapes.
         self._x = 0
 
@@ -76,18 +74,18 @@ class oled:
 
     def flush(self, data):
         # Draw a black filled box to clear the image.
-        self._draw.rectangle((0,0,self._width, self._height), outline=0, fill=0)
+        self._draw.rectangle((0, 0, self._width, self._height), outline=0, fill=0)
 
         # Write two lines of text.
-        self._draw.text((self._x, self._top),       data[0],  font=self._font, fill=255)
-        self._draw.text((self._x, self._top+8),     data[1],  font=self._font, fill=255)
-        self._draw.text((self._x, self._top+16),    data[2],  font=self._font, fill=255)
-        self._draw.text((self._x, self._top+24),    data[3],  font=self._font, fill=255)
+        self._draw.text((self._x, self._top), data[0], font=self._font, fill=255)
+        self._draw.text((self._x, self._top + 8), data[1], font=self._font, fill=255)
+        self._draw.text((self._x, self._top + 16), data[2], font=self._font, fill=255)
+        self._draw.text((self._x, self._top + 24), data[3], font=self._font, fill=255)
         if 'i2c-128*64' == self._type:
-            self._draw.text((self._x, self._top+32),    data[4],  font=self._font, fill=255)
-            self._draw.text((self._x, self._top+40),    data[5],  font=self._font, fill=255)
-            self._draw.text((self._x, self._top+48),    data[6],  font=self._font, fill=255)
-            self._draw.text((self._x, self._top+56),    data[7],  font=self._font, fill=255)
+            self._draw.text((self._x, self._top + 32), data[4], font=self._font, fill=255)
+            self._draw.text((self._x, self._top + 40), data[5], font=self._font, fill=255)
+            self._draw.text((self._x, self._top + 48), data[6], font=self._font, fill=255)
+            self._draw.text((self._x, self._top + 56), data[7], font=self._font, fill=255)
         # Display image.
         self._disp.image(self._image)
         self._disp.display()

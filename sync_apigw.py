@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding:utf-8 _*-
 import sqlite3, time
 from lib.public import *
 from lib import apigw

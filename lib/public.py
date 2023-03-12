@@ -1,5 +1,5 @@
 #!/usr/bin/python
-
+# -*- coding:utf-8 _*-
 import json
 import os
 import sqlite3
