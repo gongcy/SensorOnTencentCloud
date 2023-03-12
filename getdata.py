@@ -2,16 +2,23 @@
 
 import time
 
+from lib import dht22
 from lib.public import *
 
 
-def updatedata(udata):
+def updatedata(udata, tdata, hdata):
     # get time
     utime = int(time.time())
     stime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(utime))
 
     # get data.dict
-    ddata = {"utime": utime, "stime": stime, "udata": round(udata, 3)}
+    ddata = {
+        "utime": utime,
+        "stime": stime,
+        "udata": round(udata, 3),
+        "tdata": tdata,
+        "hdata": hdata,
+    }
 
     # format data
     cache = json.dumps(ddata)  # "{utime}	{stime}	{udata}".format(**ddata)
@@ -43,6 +50,7 @@ ser = serial.Serial("/dev/serial0", 9600)
 
 while True:
     r_data = ser.read()
+    tdata, hdata = dht22.get_dht_data()
     sleep(0.3)
     data_left = ser.inWaiting()
     r_data += ser.read(data_left)
@@ -55,4 +63,4 @@ while True:
         n = 0
         n = ord(r_data[4]) * 256 + ord(r_data[5])
 
-        updatedata(n / 1000.0)
+        updatedata(n / 1000.0, )
