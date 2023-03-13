@@ -1,0 +1,18 @@
+# /etc/systemd/system/sensor.service
+[Unit]
+Description=Sensor
+#Wants=mysql.service
+#After=mysql.service
+
+[Service]
+User=pi
+NoNewPrivileges=true
+#WorkingDirectory=
+ExecStart=/home/pi/services/sensor.sh
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNPROC=500
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target
