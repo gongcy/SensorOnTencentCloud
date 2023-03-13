@@ -15,7 +15,7 @@ cachefile = get_cachepath()
 rflag, wlanip_tmp = commands.getstatusoutput("ifconfig wlan0 | grep 'inet ' | awk '{print $2}'")
 wlanip = 'NULL' if 0 != rflag else wlanip_tmp
 # oled obj
-oledobj = oled('i2c-128*32')
+oledobj = oled('i2c-128*64')
 checktime = 0
 showdata = []
 while True:
