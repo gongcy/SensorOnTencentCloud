@@ -56,8 +56,7 @@ while True:
     data_left = ser.inWaiting()
     r_data += ser.read(data_left)
     if 9 != len(r_data):
-        print
-        'error length: %d' % len(r_data)
+        print('error length: %d' % len(r_data))
         continue
     else:
         # get num
