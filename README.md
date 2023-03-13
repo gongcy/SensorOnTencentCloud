@@ -10,11 +10,11 @@ Rpi - Rapspberry Pi
 
 **终端展示**
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/rpi_1.png)
+![](./images/rpi_1.png)
 
 **云端展示**
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/yuntu_1.gif)
+![](./images/yuntu_1.gif)
 
 ## 准备工作
 
@@ -53,7 +53,7 @@ Rpi - Rapspberry Pi
 | - | - |
 | client_package/ | 云API网关 SDK文件夹 |
 | client_package/readme.md | SDK下载与使用说明 |
-| data/* | 配置文件 | 
+| data/* | 配置文件 |
 | lib/* | 封装库 |
 | flusholed.py | OLED显示 |
 | getdata.py | 传感器读取与数据记录 |
@@ -69,7 +69,7 @@ Rpi - Rapspberry Pi
 
 **架构示意图**
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/demo_sotc_structure.png)
+![](./images/demo_sotc_structure.png)
 
 ## 具体搭建
 
@@ -86,23 +86,28 @@ _注2: 云端部分是通用接口，可按接口格式，上报并展示其它�
 
 获取云端最新数据时间戳
 
-```
+```json
 {
-	'type':'getindex'
+    "type": "getindex"
 }
 ```
 
 上报数据
 
-```
+```json
 {
-	'type':'putdata',
-	'data':
-	[
-		{'utime':12345678,'udata':0.01},
-		{'utime':12345679,'udata':0.01},
-		...
-	]
+    "type": "putdata",
+    "data": [
+        {
+            "utime": 12345678,
+            "udata": 0.01
+        },
+        {
+            "utime": 12345679,
+            "udata": 0.01
+        },
+        ...
+    ]
 }
 ```
 
@@ -121,11 +126,11 @@ _注：网络交互与签名，由API网关SDK实现，上述格式仅为核心�
 
 1. RPI GPIO图示
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/rpi_2.jpg)
+![](./images/rpi_2.jpg)
 
 2. 接线示意图
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/demo_sotc_rpi_gpio.png)
+![](./images/demo_sotc_rpi_gpio.png)
 
 3. 接线说明
 
@@ -148,9 +153,9 @@ _注：本次使用传感器，硬件接口是1.25mm端子，Rpi是2.5mm端子�
 
 按下图示意打开I2C接口
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/openi2c_1.png)
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/openi2c_2.png)
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/openi2c_3.png)
+![](./images/openi2c_1.png)
+![](./images/openi2c_2.png)
+![](./images/openi2c_3.png)
 
 测试执行
 
@@ -158,7 +163,7 @@ _注：本次使用传感器，硬件接口是1.25mm端子，Rpi是2.5mm端子�
 i2cdetect -y 1
 ```
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/i2cdetect_1.png)
+![](./images/i2cdetect_1.png)
 
 看到 3C 即识别硬件成功
 
@@ -172,9 +177,9 @@ _注：UART默认开启，无需配置_
 
 ```
 nptdate cn.ntp.org.cn
-/sotc/getdata.py &
+sudo ./getdata.py &
 sleep 3
-/sotc/flusholed.py &
+sudo ./flusholed.py &
 ```
 
 此时OLED应有显示数据。
@@ -185,13 +190,8 @@ _注2：电化学传感器有预热时间，预热时间内数据不稳定_
 
 2. 添加启动项
 
-编辑 /etc/rc.local 
-
-```
-nptdate cn.ntp.org.cn
-/sotc/getdata.py &
-sleep 3
-/sotc/flusholed.py &
+```bash
+sudo systemctl enable sensor.service
 ```
 
 3. 添加计划任务
@@ -215,24 +215,30 @@ _注：基于时间成本与应用环境考虑，未使用守护进程或服务�
 _表结构_
 
 ```sql
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
+SET
+SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET
+AUTOCOMMIT = 0;
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET
+time_zone = "+00:00";
 
-CREATE TABLE `sensordata` (
-  `id` int(11) NOT NULL,
-  `stime` timestamp NULL DEFAULT NULL,
-  `utype` int(11) NOT NULL DEFAULT '0',
-  `udata` float NOT NULL,
-  `sdata` varchar(256) DEFAULT NULL
+CREATE TABLE `sensordata`
+(
+    `id`    int(11) NOT NULL,
+    `stime` timestamp NULL DEFAULT NULL,
+    `utype` int(11) NOT NULL DEFAULT '0',
+    `udata` float NOT NULL,
+    "tdata" REAL  NOT NULL,
+    "hdata" REAL  NOT NULL,
+    `sdata` varchar(256) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ALTER TABLE `sensordata`
-  ADD PRIMARY KEY (`id`);
+    ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `sensordata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    MODIFY `id` int (11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 ```
 
@@ -257,7 +263,8 @@ _注：由于后续使用API网关触发，可后续联调_
 
 #### 云API网关
 
-访问 [API网关 控制台](https://console.cloud.tencent.com/apigateway) 配置网关服务，如由上节云函数部分配置触发，则API网关服务已经建立，仅需调整配置，以及下载使用API网关SDK。
+访问 [API网关 控制台](https://console.cloud.tencent.com/apigateway)
+配置网关服务，如由上节云函数部分配置触发，则API网关服务已经建立，仅需调整配置，以及下载使用API网关SDK。
 
 具体操作可参考 client_package/readme.md
 
@@ -271,7 +278,7 @@ _注：由于后续使用API网关触发，可后续联调_
 
 2. 操作示例图
 
-![](https://github.com/eckygao/SensorOnTencentCloud/blob/master/images/yuntu_2.png)
+![](./images/yuntu_2.png)
 
 3. 组件配置信息
 
@@ -310,7 +317,7 @@ select distinct (dt), round(AVG(udata),3) as y, dt as x, '0' as s from (select i
 1. 执行脚本
 
 ```
-/sotc/sync_apigw.py
+sudo ./sync_apigw.py
 ```
 
 此时云数据库应新增数据，云图应有展示。
