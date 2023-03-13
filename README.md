@@ -176,7 +176,7 @@ _注：UART默认开启，无需配置_
 执行脚本
 
 ```
-nptdate cn.ntp.org.cn
+ntpdate cn.ntp.org.cn
 sudo ./getdata.py &
 sleep 3
 sudo ./flusholed.py &
