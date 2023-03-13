@@ -6,7 +6,7 @@ import sqlite3
 
 
 def get_config():
-    confile = os.path.split(os.path.realpath(__file__))[0] + '/../data/data.conf'
+    confile = os.path.split(os.path.realpath(__file__))[0] + '/../data/config.json'
     with open(confile, 'r') as f:
         data = json.load(f)
         return data
