@@ -1,10 +1,9 @@
 # -*- coding: utf8 -*-
-import datetime
-import pymysql.cursors
+import json
 import logging
 import sys
-import pytz
-import json, hashlib, time
+
+import pymysql.cursors
 
 # MySql数据库账号信息,需要提前创建好数据库
 Host = '????????.sql.tencentcdb.com'
@@ -18,25 +17,29 @@ logger = logging.getLogger()
 logger.setLevel(level=logging.INFO)
 
 g_connection = None
+
+
 def connect_mysql():
     global g_connection
     try:
         g_connection = pymysql.connect(host=Host,
-                                     user=User,
-                                     password=Password,
-                                     port=Port,
-                                     db=DB,
-                                     charset='utf8',
-                                     autocommit = True,
-                                     cursorclass=pymysql.cursors.DictCursor)
+                                       user=User,
+                                       password=Password,
+                                       port=Port,
+                                       db=DB,
+                                       charset='utf8',
+                                       autocommit=True,
+                                       cursorclass=pymysql.cursors.DictCursor)
         return True, []
     except Exception as e:
         g_connection = None
-        g_connection_errinfo = e;
+        g_connection_errinfo = e
         return False, e
+
 
 print("connect database")
 connect_mysql()
+
 
 def recheck_connect():
     global g_connection
@@ -56,6 +59,7 @@ def recheck_connect():
     cursor.close()
     return True, ''
 
+
 def get_index():
     global g_connection
     rflag, errorinfo = recheck_connect()
@@ -63,14 +67,15 @@ def get_index():
         return False, errorinfo
 
     with g_connection.cursor() as cursor:
-        sql = 'use %s'%DB
+        sql = 'use %s' % DB
         cursor.execute(sql)
         # get index
         cursor.execute("select unix_timestamp(stime) as utime from sensordata_test order by id desc limit 1")
         result = cursor.fetchall()
     cursor.close()
     rdata = 0 if 0 == len(result) else str(result[0]['utime'])
-    return True, rdata;
+    return True, rdata
+
 
 def put_data(data):
     # check data
@@ -78,30 +83,30 @@ def put_data(data):
         return False, "No data to insert"
     # cdb
     global g_connection
-    sql = "insert into sensordata_test (stime, udata) values ( from_unixtime(%s), %s)";
+    sql = "insert into sensordata_test (stime, udata) values ( from_unixtime(%s), %s)"
     # create datalist
     sdata = []
-    for i in data: 
-        sdata.append([ i['utime'], i['udata']])
+    for i in data:
+        sdata.append([i['utime'], i['udata']])
     # insert into db
     try:
         with g_connection.cursor() as cursor:
-            cursor.executemany(sql,sdata)
+            cursor.executemany(sql, sdata)
             g_connection.commit()
         cursor.close()
-        return True, '';
+        return True, ''
     except Exception as e:
         g_connection.rollback()
-        return False, "insert failed : %s"%e
-    
+        return False, "insert failed : %s" % e
+
 
 def main_handler(event, context):
     # base format
-    rdata = { 'isBase64Encoded': False,'statusCode': 200,'headers': {"Content-Type":"text/html"},'body': ''}
+    rdata = {'isBase64Encoded': False, 'statusCode': 200, 'headers': {"Content-Type": "text/html"}, 'body': ''}
     # get post data
     if 'body' not in event:
         rdata['statusCode'] = 409
-        rdata['body'] = 'Lost post data';
+        rdata['body'] = 'Lost post data'
         return rdata
 
     pdata = ''
@@ -109,13 +114,13 @@ def main_handler(event, context):
         pdata = json.loads(json.loads(event['body']))
     except:
         rdata['statusCode'] = 409
-        rdata['body'] = 'post not json';
+        rdata['body'] = 'post not json'
         return rdata
     # check function
-    print pdata, type(pdata)
+    print(pdata, type(pdata))
     if 'type' not in pdata:
         rdata['statusCode'] = 409
-        rdata['body'] = 'Lost type section:%s'%(json.dumps(pdata));
+        rdata['body'] = 'Lost type section:%s' % (json.dumps(pdata))
         return rdata
 
     if 'getindex' == pdata['type']:
@@ -123,11 +128,11 @@ def main_handler(event, context):
         rdata['statusCode'] = 200 if rflag else 409
         rdata['body'] = rinfo
     elif 'putdata' == pdata['type']:
-        rflag, rinfo = put_data( pdata['data'])
+        rflag, rinfo = put_data(pdata['data'])
         rdata['statusCode'] = 200 if rflag else 409
         rdata['body'] = rinfo
     else:
         rdata['statusCode'] = 409
-        rdata['body'] = 'Unknown section : %s'%pdata['type'];
+        rdata['body'] = 'Unknown section : %s' % pdata['type']
 
     return rdata
