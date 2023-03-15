@@ -1,11 +1,10 @@
 # -*- coding:utf-8 _*-
 
-# Import the SSD1306 module.
-import adafruit_ssd1306
-import busio
-from PIL import Image, ImageDraw, ImageFont
-# Import all board pins.
-from board import SCL, SDA
+import Adafruit_SSD1306
+
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 
 class oled:
@@ -27,28 +26,23 @@ class oled:
         SPI_PORT = 0
         SPI_DEVICE = 0
 
-        # Create the I2C interface.
-        i2c = busio.I2C(SCL, SDA)
         if 'i2c-128*32' == self._type:
             # 128x32 display with hardware I2C:
-            # Create the SSD1306 OLED class.
-            # The first two parameters are the pixel width and pixel height.  Change these
-            # to the right size for your display!
-            # Alternatively you can change the I2C address of the device with an addr parameter:
-            # display = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c, addr=0x31)
-            self._disp = adafruit_ssd1306.SSD1306_I2C(128, 32, i2c)
+            self._disp = Adafruit_SSD1306.SSD1306_128_32(rst=RST)
         elif 'i2c-128*64' == self._type:
             # 128x64 display with hardware I2C:
-            self._disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
+            self._disp = Adafruit_SSD1306.SSD1306_128_64(rst=RST)
         else:
             self._initflag = False
             self._error = 'no this type : %s,just i2c-128*32/iwc-128*64' % self._type
             return False
 
-        # Clear the display.  Always call show after changing pixels to make the display
-        # update visible!
-        self._disp.fill(0)
-        self._disp.show()
+        # Initialize library.
+        self._disp.begin()
+
+        # Clear display.
+        self._disp.clear()
+        self._disp.display()
 
         # Create blank image for drawing.
         # Make sure to create image with mode '1' for 1-bit color.
@@ -94,6 +88,6 @@ class oled:
             self._draw.text((self._x, self._top + 56), data[7], font=self._font, fill=255)
         # Display image.
         self._disp.image(self._image)
-        self._disp.show()
+        self._disp.display()
 
         return True
