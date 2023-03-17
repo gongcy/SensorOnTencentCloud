@@ -6,8 +6,8 @@ import serial
 ser = serial.Serial('/dev/serial0', 9600, timeout=1)
 time.sleep(1)
 
+ser.write(b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47")
 while True:
-    ser.write(b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47")
     # ser.write(bytes.fromhex('ff 01 78 00 00 00 00 00 87'))
     time.sleep(1)
     response = ser.read(9)
