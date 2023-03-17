@@ -9,6 +9,10 @@ from board import SCL, SDA
 
 
 class oled:
+    """
+    See: https://github.com/adafruit/Adafruit_CircuitPython_SSD1306
+    """
+
     def __init__(self, type):
         self._error = ''
         self._initflag = False
@@ -42,7 +46,7 @@ class oled:
             self._disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
         else:
             self._initflag = False
-            self._error = 'no this type : %s,just i2c-128*32/iwc-128*64' % self._type
+            self._error = 'no this type : %s,just i2c-128*32/i2c-128*64' % self._type
             return False
 
         # Clear the display.  Always call show after changing pixels to make the display
