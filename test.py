@@ -40,7 +40,7 @@ def get_concentration(passive=False):
 def check_valid(value) -> bool:
     # 校验和 = （取反（Byte1+Byte2+……+Byte7））+ 1
     length = len(value)
-    j = 0
+    j = 1
     sum = 0
     while j < length - 2:
         sum += value[j]
