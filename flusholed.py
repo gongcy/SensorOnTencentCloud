@@ -4,16 +4,17 @@ import json
 import os
 import time
 
-import commands
-
 from lib.oled import oled
 from lib.public import get_cachepath
+
+# import commands
 
 # get cachedata
 cachefile = get_cachepath()
 # get wlan ip
-rflag, wlanip_tmp = commands.getstatusoutput("ifconfig wlan0 | grep 'inet ' | awk '{print $2}'")
-wlanip = 'NULL' if 0 != rflag else wlanip_tmp
+# rflag, wlanip_tmp = commands.getstatusoutput("ifconfig wlan0 | grep 'inet ' | awk '{print $2}'")
+
+# wlanip = 'NULL' if 0 != rflag else wlanip_tmp
 # oled obj
 oledobj = oled('i2c-128*64')
 checktime = 0
@@ -40,7 +41,7 @@ while True:
     showdata.append(tdata['stime'])
     showdata.append("CH2O: %s ppm" % (tdata['udata'] - 0.03))
     showdata.append("T: %s°C H: %s%%" % (tdata['tdata'], tdata['hdata']))
-    showdata.append("ip: %s" % wlanip)
+    # showdata.append("ip: %s" % wlanip)
     showdata.append('')
 
     # flush data
