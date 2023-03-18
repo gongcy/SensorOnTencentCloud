@@ -45,22 +45,28 @@ def updatedata(udata, tdata, hdata):
 
 
 import serial
-from time import sleep
+
+# 切换到主动上传模式
+ENABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47"
+# 关闭主动上传模式
+DISABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x41\x00\x00\x00\x00\x46"
+# 问答模式，读浓度
+QUERY_CONCENTRATION = b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79"
 
 ser = serial.Serial("/dev/serial0", 9600)
-
+ser.write(ENABLE_AUTO_SUBMIT)
 while True:
-    r_data = ser.read()
     tdata, hdata = dht22.get_dht_data()
-    sleep(0.3)
-    data_left = ser.inWaiting()
-    r_data += ser.read(data_left)
-    if 9 != len(r_data):
-        print('error length: %d' % len(r_data))
-        continue
+    response = ser.read(9)
+    print(f"response: {response}")
+    if response[0] == 0xFF and response[1] == 0x17:
+        high_byte = response[4]
+        low_byte = response[5]
+        concentration = ((high_byte << 8) + low_byte) / 1000.0
+        # ch2o_ppm = (high_byte << 8) | low_byte
+        print("Formaldehyde concentration: %.3f ppm" % concentration)
+        updatedata(concentration / 1000.0, tdata, hdata)
     else:
-        # get num
-        n = 0
-        n = ord(r_data[4]) * 256 + ord(r_data[5])
-
-        updatedata(n / 1000.0, tdata, hdata)
+        print(f"error start, response={response}")
+        continue
+    time.sleep(1)
