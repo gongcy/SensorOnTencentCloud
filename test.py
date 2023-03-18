@@ -6,7 +6,14 @@ import serial
 ser = serial.Serial('/dev/serial0', 9600, timeout=1)
 time.sleep(1)
 
-ser.write(b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47")
+# 切换到主动上传模式
+ENABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47"
+# 关闭主动上传模式
+DISABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x41\x00\x00\x00\x00\x46"
+# 问答模式，读浓度
+QUERY_CONCENTRATION = b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79"
+
+ser.write(ENABLE_AUTO_SUBMIT)
 while True:
     # ser.write(bytes.fromhex('ff 01 78 00 00 00 00 00 87'))
     time.sleep(1)
@@ -20,5 +27,3 @@ while True:
         print("Formaldehyde concentration: %.3f ppm" % concentration)
     else:
         print("error")
-
-    time.sleep(1)
