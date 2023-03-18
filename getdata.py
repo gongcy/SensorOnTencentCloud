@@ -65,7 +65,7 @@ while True:
         concentration = ((high_byte << 8) + low_byte) / 1000.0
         # ch2o_ppm = (high_byte << 8) | low_byte
         print("Formaldehyde concentration: %.3f ppm" % concentration)
-        updatedata(concentration / 1000.0, tdata, hdata)
+        updatedata(concentration, tdata, hdata)
     else:
         print(f"error start, response={response}")
         continue
