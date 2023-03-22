@@ -58,11 +58,12 @@ class oled:
 
         # Draw some shapes.
         # First define some constants to allow easy resizing of shapes.
-        padding = -2
-        self._top = padding
-        bottom = self._height - padding
+        # padding = 0
+        # self._top = padding
+        # bottom = self._height - padding
         # Move left to right keeping track of the current x position for drawing shapes.
         self._x = 0
+        self._y = 0
 
         # Load default font.
         self._font = ImageFont.load_default()
@@ -72,20 +73,13 @@ class oled:
         # font = ImageFont.truetype('Minecraftia.ttf', 8)
         return True
 
-    def flush(self, data):
+    def flush(self, lines: list):
         # Draw a black filled box to clear the image.
         self._draw.rectangle((0, 0, self._width, self._height), outline=0, fill=0)
-
-        # Write two lines of text.
-        self._draw.text((self._x, self._top), data[0], font=self._font, fill=255)
-        self._draw.text((self._x, self._top + 8), data[1], font=self._font, fill=255)
-        self._draw.text((self._x, self._top + 16), data[2], font=self._font, fill=255)
-        self._draw.text((self._x, self._top + 24), data[3], font=self._font, fill=255)
-        if 'i2c-128*64' == self._type:
-            self._draw.text((self._x, self._top + 32), data[4], font=self._font, fill=255)
-            self._draw.text((self._x, self._top + 40), data[5], font=self._font, fill=255)
-            self._draw.text((self._x, self._top + 48), data[6], font=self._font, fill=255)
-            self._draw.text((self._x, self._top + 56), data[7], font=self._font, fill=255)
+        # Loop through each line of text and display it on the OLED
+        for line in lines:
+            self._draw.text((self._x, self._y), line, font=self._font, fill=255)
+            self._y += self._font.getsize(line)[1]
         # Display image.
         self._disp.image(self._image)
         self._disp.display()
