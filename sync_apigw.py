@@ -1,9 +1,10 @@
 #!/usr/bin/python
 # -*- coding:utf-8 _*-
+import sqlite3
 import time
 
 from lib import apigw
-from lib.public import *
+from lib.public import get_dbpath
 
 # get config
 sdb = get_dbpath()
