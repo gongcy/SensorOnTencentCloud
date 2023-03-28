@@ -5,7 +5,7 @@ Description=Sensor
 #After=mysql.service
 
 [Service]
-User=pi
+User=root
 NoNewPrivileges=true
 #WorkingDirectory=
 ExecStart=/opt/SensorOnTencentCloud/sensor.sh
