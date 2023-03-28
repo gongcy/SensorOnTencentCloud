@@ -1,5 +1,5 @@
 #!/bin/bash
 
-/home/pi/SensorOnTencentCloud/getdata.py &
+/opt/SensorOnTencentCloud/getdata.py &
 sleep 3
-/home/pi/SensorOnTencentCloud/flusholed.py
+/opt/SensorOnTencentCloud/flusholed.py
