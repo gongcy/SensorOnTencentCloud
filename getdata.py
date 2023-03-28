@@ -4,6 +4,8 @@ import json
 import sqlite3
 import time
 
+import serial
+
 from lib import dht22
 from lib.public import get_cachepath, get_dbpath
 
@@ -53,8 +55,6 @@ def calculate_checksum(data):
     checksum = sum(data[:-1])
     return (~checksum + 1) & 0xFF
 
-
-import serial
 
 # 切换到主动上传模式
 ENABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47"
