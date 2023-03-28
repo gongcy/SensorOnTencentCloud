@@ -70,10 +70,10 @@ while True:
     response = ser.read(9)
     i = 0
     while i < len(response):
-        print("%d: %x".format(i, response[i]))
+        print("%d: %x" % (i, response[i]))
         i += 1
     checksum = calculate_checksum(response)
-    print("response: %s, checksum: %d, checkbit: %d".format(response, checksum, response[8]))
+    print("response: %s, checksum: %d, checkbit: %d" % (response, checksum, response[8]))
     if response[0] == 0xFF and response[1] == 0x17:
         high_byte = response[4]
         low_byte = response[5]
