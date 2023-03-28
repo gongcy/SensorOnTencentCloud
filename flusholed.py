@@ -16,7 +16,8 @@ cachefile = get_cachepath()
 
 # wlanip = 'NULL' if 0 != rflag else wlanip_tmp
 # oled obj
-oledobj = oled('i2c-128*64')
+# oledobj = oled('i2c-128*64')
+oledobj = oled('i2c-128*32')
 checktime = 0
 showdata = []
 while True:
@@ -39,7 +40,7 @@ while True:
         f.close()
     checktime = mtime
     showdata.append(tdata['stime'])
-    showdata.append("CH2O: %s ppm" % (tdata['udata'] - 0.03))
+    showdata.append("CH2O: %.3f ppm" % tdata['udata'])
     showdata.append("T: %s°C H: %s%%" % (tdata['tdata'], tdata['hdata']))
     # showdata.append("ip: %s" % wlanip)
     showdata.append('')

@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding:utf-8 _*-
+import json
+import sqlite3
 import time
 
 from lib import dht22
-from lib.public import *
+from lib.public import get_cachepath, get_dbpath
 
 
 def updatedata(udata, tdata, hdata):
@@ -44,6 +46,14 @@ def updatedata(udata, tdata, hdata):
     return True
 
 
+def calculate_checksum(data):
+    """
+    计算数据包的校验和值
+    """
+    checksum = sum(data[:-1])
+    return (~checksum + 1) & 0xFF
+
+
 import serial
 
 # 切换到主动上传模式
@@ -58,7 +68,12 @@ ser.write(ENABLE_AUTO_SUBMIT)
 while True:
     tdata, hdata = dht22.get_dht_data()
     response = ser.read(9)
-    print(f"response: {response}")
+    i = 0
+    while i < len(response):
+        print("%d: %x".format(i, response[i]))
+        i += 1
+    checksum = calculate_checksum(response)
+    print("response: %s, checksum: %d, checkbit: %d".format(response, checksum, response[8]))
     if response[0] == 0xFF and response[1] == 0x17:
         high_byte = response[4]
         low_byte = response[5]
