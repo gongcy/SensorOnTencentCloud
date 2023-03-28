@@ -52,7 +52,7 @@ def calculate_checksum(data):
     """
     计算数据包的校验和值
     """
-    checksum = sum(data[:-1])
+    checksum = sum(data[1:-1])
     return (~checksum + 1) & 0xFF
 
 
