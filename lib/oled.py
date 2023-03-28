@@ -85,10 +85,9 @@ class oled:
     def flush(self, lines: list):
         # Draw a black filled box to clear the image.
         self._draw.rectangle((0, 0, self._width, self._height), outline=0, fill=0)
-        x = 0
         y = 0
         for line in lines:
-            self._draw.text((x, y), line, font=self._font, fill=255)
+            self._draw.text((self._top, y), line, font=self._font, fill=255)
             y += self._font.getsize(line)[1]
         # Display image.
         self._disp.image(self._image)
