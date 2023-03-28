@@ -5,6 +5,8 @@ import time
 
 import serial
 
+from lib import util
+
 ser = serial.Serial('/dev/serial0', 9600, timeout=1)
 time.sleep(1)
 
@@ -25,8 +27,12 @@ def get_concentration(passive=False):
         # ser.write(bytes.fromhex('ff 01 78 00 00 00 00 00 87'))
         time.sleep(1)
         response = ser.read(9)
-        is_valid = check_valid(response)
-        print(f"response: {response}, is_valid: {is_valid}")
+        i = 0
+        while i < len(response):
+            print("%d: %x" % (i, response[i]))
+            i += 1
+        checksum = util.calculate_checksum(response)
+        print("response: %s, checksum: %d, checkbit: %d" % (response, checksum, response[8]))
         if response[0] == 0xFF and response[1] == 0x17:
             high_byte = response[4]
             low_byte = response[5]
@@ -35,20 +41,6 @@ def get_concentration(passive=False):
             print("Formaldehyde concentration: %.3f ppm" % concentration)
         else:
             print("error")
-
-
-def check_valid(value) -> bool:
-    # 校验和 = （取反（Byte1+Byte2+……+Byte7））+ 1
-    length = len(value)
-    j = 1
-    sum = 0
-    while j < length - 2:
-        sum += value[j]
-        j += 1
-    check_bit = (~sum) + 1
-    if check_bit == value[length - 1]:
-        return True
-    return False
 
 
 if __name__ == '__main__':

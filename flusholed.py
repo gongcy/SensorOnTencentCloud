@@ -4,13 +4,13 @@ import json
 import os
 import time
 
+from lib import util
 from lib.oled import oled
-from lib.public import get_cachepath
 
 # import commands
 
 # get cachedata
-cachefile = get_cachepath()
+cachefile = util.get_cachepath()
 # get wlan ip
 # rflag, wlanip_tmp = commands.getstatusoutput("ifconfig wlan0 | grep 'inet ' | awk '{print $2}'")
 
@@ -47,4 +47,4 @@ while True:
 
     # flush data
     if not oledobj.flush(showdata):
-        print('Failed to flusholed: %s' % oledobj.get_errorinfo())
+        print('Failed to flusholed: %s' % oledobj.get_errorinfi())

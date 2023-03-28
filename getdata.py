@@ -7,7 +7,7 @@ import time
 import serial
 
 from lib import dht22
-from lib.public import get_cachepath, get_dbpath
+from lib import util
 
 
 def updatedata(udata, tdata, hdata):
@@ -30,8 +30,8 @@ def updatedata(udata, tdata, hdata):
             "values ('{utime}','{udata}','{tdata}','{hdata}')".format(**ddata)
 
     # get config
-    cfile = get_cachepath()
-    dbfile = get_dbpath()
+    cfile = util.get_cachepath()
+    dbfile = util.get_dbpath()
 
     # flush cache
     f = open(cfile, "w")
@@ -48,14 +48,6 @@ def updatedata(udata, tdata, hdata):
     return True
 
 
-def calculate_checksum(data):
-    """
-    计算数据包的校验和值
-    """
-    checksum = sum(data[1:-1])
-    return (~checksum + 1) & 0xFF
-
-
 # 切换到主动上传模式
 ENABLE_AUTO_SUBMIT = b"\xFF\x01\x78\x40\x00\x00\x00\x00\x47"
 # 关闭主动上传模式
@@ -68,18 +60,14 @@ ser.write(ENABLE_AUTO_SUBMIT)
 while True:
     tdata, hdata = dht22.get_dht_data()
     response = ser.read(9)
-    i = 0
-    while i < len(response):
-        print("%d: %x" % (i, response[i]))
-        i += 1
-    checksum = calculate_checksum(response)
-    print("response: %s, checksum: %d, checkbit: %d" % (response, checksum, response[8]))
+    checksum = util.calculate_checksum(response)
+    # print("response: %s, checksum: %d, checkbit: %d" % (response, checksum, response[8]))
     if response[0] == 0xFF and response[1] == 0x17:
         high_byte = response[4]
         low_byte = response[5]
         concentration = ((high_byte << 8) + low_byte) / 1000.0
         # ch2o_ppm = (high_byte << 8) | low_byte
-        print("Formaldehyde concentration: %.3f ppm" % concentration)
+        # print("Formaldehyde concentration: %.3f ppm" % concentration)
         updatedata(concentration, tdata, hdata)
     else:
         print(f"error start, response={response}")
