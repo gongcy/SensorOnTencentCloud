@@ -60,7 +60,7 @@ ser.write(ENABLE_AUTO_SUBMIT)
 while True:
     tdata, hdata = dht22.get_dht_data()
     response = ser.read(9)
-    checksum = util.calculate_checksum(response)
+    # checksum = util.calculate_checksum(response)
     # print("response: %s, checksum: %d, checkbit: %d" % (response, checksum, response[8]))
     if response[0] == 0xFF and response[1] == 0x17:
         high_byte = response[4]
