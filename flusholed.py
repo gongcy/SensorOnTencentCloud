@@ -21,7 +21,7 @@ oledobj = oled('i2c-128*32')
 checktime = 0
 showdata = []
 while True:
-    time.sleep(1)
+    start_time = time.time()
     showdata = []
     # check modify
     mtime = os.stat(cachefile).st_mtime
@@ -48,3 +48,6 @@ while True:
     # flush data
     if not oledobj.flush(showdata):
         print('Failed to flusholed: %s' % oledobj.get_errorinfi())
+    end_time = time.time()
+    cost = end_time - start_time
+    time.sleep(1 - cost)

@@ -58,6 +58,7 @@ QUERY_CONCENTRATION = b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79"
 ser = serial.Serial("/dev/serial0", 9600)
 ser.write(ENABLE_AUTO_SUBMIT)
 while True:
+    start_time = time.time()
     tdata, hdata = dht22.get_dht_data()
     response = ser.read(9)
     # checksum = util.calculate_checksum(response)
@@ -72,4 +73,6 @@ while True:
     else:
         print(f"error start, response={response}")
         continue
-    time.sleep(1)
+    end_time = time.time()
+    cost = end_time - start_time
+    time.sleep(1 - cost)
