@@ -50,4 +50,5 @@ while True:
         print('Failed to flusholed: %s' % oledobj.get_errorinfi())
     end_time = time.time()
     cost = end_time - start_time
-    time.sleep(1 - cost)
+    if cost < 1:
+        time.sleep(1 - cost)
