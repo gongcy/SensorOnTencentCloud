@@ -13,7 +13,7 @@ def get_config():
 
 
 def get_dbinitsql():
-    sqlfile = get_config()['sqlite']['initfile']
+    sqlfile = os.path.abspath(os.path.dirname(os.path.dirname(__file__))) + '/data/init.sql'
     return open(sqlfile, "r").read()
 
 
