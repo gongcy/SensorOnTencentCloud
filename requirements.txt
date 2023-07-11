@@ -8,3 +8,4 @@ adafruit-circuitpython-dht
 pymysql
 pyserial
 pillow
+paho-mqtt

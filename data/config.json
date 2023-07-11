@@ -2,5 +2,9 @@
     "cache": "/dev/shm/sensor.info",
     "sqlite": {
         "dbfile": "/dev/shm/sensor.db"
+    },
+    "mqtt": {
+        "broker": "",
+        "port": 1883
     }
 }

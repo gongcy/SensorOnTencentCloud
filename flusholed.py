@@ -5,6 +5,7 @@ import os
 import time
 
 from lib import util
+from lib.mqtt import Mqtt
 from lib.oled import oled
 
 # import commands
@@ -20,6 +21,18 @@ cachefile = util.get_cachepath()
 oledobj = oled('i2c-128*32')
 checktime = 0
 showdata = []
+mqtt_client = Mqtt()
+
+
+def package_param(stime: str, udata: str, tdata: str, hdata: str):
+    return json.dumps({
+        'time_str': stime,
+        'ch2o': udata,
+        'temperature': tdata,
+        'humidity': hdata,
+    })
+
+
 while True:
     start_time = time.time()
     showdata = []
@@ -39,11 +52,17 @@ while True:
             tdata = json.load(f)
         f.close()
     checktime = mtime
-    showdata.append(tdata['stime'])
-    showdata.append("CH2O: %.3f ppm" % tdata['udata'])
-    showdata.append("T: %s°C H: %s%%" % (tdata['tdata'], tdata['hdata']))
+    stime = tdata['stime']
+    udata = "%.3f" % tdata['udata']
+    temp_data = tdata['tdata']
+    hdata = tdata['hdata']
+    showdata.append(stime)
+    showdata.append("CH2O: %s ppm" % udata)
+    showdata.append("T: %s°C H: %s%%" % (temp_data, hdata))
     # showdata.append("ip: %s" % wlanip)
     showdata.append('')
+    json_params_str = package_param(stime, udata, temp_data, hdata)
+    mqtt_client.send_topic(json_params_str)
 
     # flush data
     if not oledobj.flush(showdata):
