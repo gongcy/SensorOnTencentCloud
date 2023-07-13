@@ -52,7 +52,7 @@ while True:
     showdata.append("T: %s°C H: %s%%" % (temp_data, hdata))
     # showdata.append("ip: %s" % wlanip)
     showdata.append('')
-    if i % 60 == 0:
+    if i % 30 == 0:
         try:
             mqtt_client.send_message(stime, udata, temp_data, hdata)
         except Exception as e:
