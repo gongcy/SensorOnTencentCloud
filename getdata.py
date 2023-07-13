@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding:utf-8 _*-
 import json
 import sqlite3
@@ -57,7 +57,7 @@ QUERY_CONCENTRATION = b"\xFF\x01\x86\x00\x00\x00\x00\x00\x79"
 
 ser = serial.Serial("/dev/serial0", 9600)
 ser.write(ENABLE_AUTO_SUBMIT)
-i= 0
+i = 0
 tdata = 0.0
 hdata = 0.0
 while True:
