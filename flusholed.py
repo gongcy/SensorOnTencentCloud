@@ -23,16 +23,7 @@ checktime = 0
 showdata = []
 mqtt_client = Mqtt()
 
-
-def package_param(stime: str, udata: str, tdata: str, hdata: str):
-    return json.dumps({
-        'time_str': stime,
-        'ch2o': udata,
-        'temperature': tdata,
-        'humidity': hdata,
-    })
-
-
+i = 0
 while True:
     start_time = time.time()
     showdata = []
@@ -61,11 +52,11 @@ while True:
     showdata.append("T: %s°C H: %s%%" % (temp_data, hdata))
     # showdata.append("ip: %s" % wlanip)
     showdata.append('')
-    json_params_str = package_param(stime, udata, temp_data, hdata)
-    try:
-        mqtt_client.send_message(json_params_str)
-    except Exception as e:
-        print(e)
+    if i % 60 == 0:
+        try:
+            mqtt_client.send_message(stime, udata, temp_data, hdata)
+        except Exception as e:
+            print(e)
 
     # flush data
     if not oledobj.flush(showdata):

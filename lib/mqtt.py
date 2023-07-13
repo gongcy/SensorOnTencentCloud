@@ -4,6 +4,8 @@
 @author: regangong@tencent.com
 @date: 2023/7/10
 """
+import json
+
 import paho.mqtt.client as mqtt
 
 from lib import util
@@ -30,9 +32,18 @@ class Mqtt(object):
         self.client.username_pw_set(mqtt_username, mqtt_password)
         self.client.connect(mqtt_broker, mqtt_port)
 
-    def send_message(self, msg_body: str):
+    def send_message(self, stime, udata, temp_data, hdata):
+        msg_body = self.package_param(stime, udata, temp_data, hdata)
         res = self.client.publish(mqtt_topic, msg_body)
         return res
+
+    def package_param(self, stime: str, udata: str, tdata: str, hdata: str):
+        return json.dumps({
+            'time_str': stime,
+            'ch2o': udata,
+            'temperature': tdata,
+            'humidity': hdata,
+        })
 
     def disconnect(self):
         # Disconnect MQTT client
