@@ -57,7 +57,7 @@ while True:
             mqtt_client.send_message(stime, udata, temp_data, hdata)
         except Exception as e:
             print(e)
-
+    i += 1
     # flush data
     if not oledobj.flush(showdata):
         print('Failed to flusholed: %s' % oledobj.get_errorinfi())
