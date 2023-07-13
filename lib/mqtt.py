@@ -14,8 +14,8 @@ mqtt_port = util.get_config()['mqtt']['port']
 mqtt_topic = "device/dht-ze08/sensor"
 
 
-class Mqtt:
-    def __int__(self):
+class Mqtt(object):
+    def __init__(self):
         self.client = mqtt.Client()
         self.client.connect(mqtt_broker, mqtt_port)
 
