@@ -5,6 +5,8 @@
     },
     "mqtt": {
         "broker": "",
-        "port": 1883
+        "port": 1883,
+        "username": "",
+        "password": ""
     }
 }

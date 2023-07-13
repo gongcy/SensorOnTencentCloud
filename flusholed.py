@@ -63,7 +63,7 @@ while True:
     showdata.append('')
     json_params_str = package_param(stime, udata, temp_data, hdata)
     try:
-        mqtt_client.send_topic(json_params_str)
+        mqtt_client.send_message(json_params_str)
     except Exception as e:
         print(e)
 
