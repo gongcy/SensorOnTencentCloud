@@ -1,5 +1,14 @@
 #!/bin/bash
 
+log_dir="/var/log/sensor"
+
+if [ ! -d "$log_dir" ]; then
+  sudo mkdir -p "$log_dir"
+  echo "Directory created successfully"
+else
+  sudo rm -r "$log_dir"/*
+fi
+
 sudo rm -rf /dev/shm/sensor.db
 sudo rm -rf /dev/shm/sensor.info
 
