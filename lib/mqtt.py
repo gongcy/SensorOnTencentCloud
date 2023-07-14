@@ -8,6 +8,7 @@ import json
 
 import paho.mqtt.client as mqtt
 
+from lib import log
 from lib import util
 
 # MQTT broker details
@@ -19,11 +20,11 @@ mqtt_topic = "device/dht-ze08/sensor"
 
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code " + str(rc))
+    log.info("Connected with result code " + str(rc))
 
 
 def on_message(client, userdata, msg):
-    print(msg.topic + " " + str(msg.payload))
+    log.info(msg.topic + " " + str(msg.payload))
 
 
 class Mqtt(object):

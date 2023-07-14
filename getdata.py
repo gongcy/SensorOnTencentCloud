@@ -7,6 +7,7 @@ import time
 import serial
 
 from lib import dht22
+from lib import log
 from lib import util
 
 
@@ -75,7 +76,7 @@ while True:
         # print("Formaldehyde concentration: %.3f ppm" % concentration)
         updatedata(concentration, tdata, hdata)
     else:
-        print(f"error start, response={response}")
+        log.error(f"error start, response={response}")
         continue
     end_time = time.time()
     cost = end_time - start_time

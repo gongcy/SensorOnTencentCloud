@@ -3,7 +3,9 @@
 import json
 import os
 import time
+import traceback
 
+from lib import log
 from lib import util
 from lib.mqtt import Mqtt
 from lib.oled import oled
@@ -38,7 +40,8 @@ while True:
         try:
             tdata = json.load(f)
         except Exception as e:
-            print(e)
+            error_message = traceback.format_exc()
+            log.error(str(e) + '||' + error_message)
             time.sleep(0.1)
             tdata = json.load(f)
         f.close()
@@ -56,11 +59,12 @@ while True:
         try:
             mqtt_client.send_message(stime, udata, temp_data, hdata)
         except Exception as e:
-            print(e)
+            error_message = traceback.format_exc()
+            log.error(str(e) + '||' + error_message)
     i += 1
     # flush data
     if not oledobj.flush(showdata):
-        print('Failed to flusholed: %s' % oledobj.get_errorinfi())
+        log.error('Failed to flusholed: %s' % oledobj.get_errorinfi())
     end_time = time.time()
     cost = end_time - start_time
     if cost < 1:
