@@ -41,7 +41,7 @@ while True:
             tdata = json.load(f)
         except Exception as e:
             error_message = traceback.format_exc()
-            log.error(str(e) + '||' + error_message)
+            log.error(str(e) + '||' + error_message + '||' + str(f))
             time.sleep(0.1)
             tdata = json.load(f)
         f.close()
